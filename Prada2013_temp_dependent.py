@@ -84,45 +84,39 @@ def graphite_LGM50_electrolyte_exchange_current_density_Chen2020(
 
 
 
-def LFP_ocp_Afshar2017(sto, T):
-    """
-    Open-circuit potential for LFP. Prada2013 doesn't give an OCP for LFP, so we use
-    Afshar2017 instead.
+# def LFP_ocp_Afshar2017(sto, T):
+#     """
+#     Open-circuit potential for LFP. Prada2013 doesn't give an OCP for LFP, so we use
+#     Afshar2017 instead.
 
-    References
-    ----------
-    .. [1] Afshar, S., Morris, K., & Khajepour, A. (2017). Efficient electrochemical
-    model for lithium-ion cells. arXiv preprint arXiv:1709.03970.
+#     References
+#     ----------
+#     .. [1] Afshar, S., Morris, K., & Khajepour, A. (2017). Efficient electrochemical
+#     model for lithium-ion cells. arXiv preprint arXiv:1709.03970.
 
-    Parameters
-    ----------
-    sto : :class:`pybamm.Symbol`
-       stoichiometry of material (li-fraction)
+#     Parameters
+#     ----------
+#     sto : :class:`pybamm.Symbol`
+#        stoichiometry of material (li-fraction)
 
-    """
+#     """
 
-    # c1 = -150 * sto
-    # c2 = -30 * (1 - sto)
-    # k = 3.4077 - 0.020269 * sto + 0.5 * np.exp(c1) - 0.9 * np.exp(c2)
+#     # c1 = -150 * sto
+#     # c2 = -30 * (1 - sto)
+#     # k = 3.4077 - 0.020269 * sto + 0.5 * np.exp(c1) - 0.9 * np.exp(c2)
 
-    # return k
+#     # return k
 
-    u = LFP_OCP(sto, T)
+#     u = LFP_OCP(sto, T)
 
-    return u
+#     return u
 
-def LFP_ocp_with_T(sto):
-    
-    #T = pybamm.Symbol("Cell temperature [K]")
-    T = pybamm.Symbol("Initial temperature [K]")
+def LFP_ocp_with_T(sto, T):
+    sto_np = pybamm.EvaluatorPython(sto)
+    T_np = pybamm.EvaluatorPython(T)
+    u = LFP_OCP(sto_np, T_np)
+    return float(u)
 
-    def LFP_OCP_backend(sto, T):
-        sto = pybamm.EvaluatorPython(sto)
-        T = pybamm.EvaluatorPython(T)
-        u = LFP_OCP(sto, T)
-        return float(u) if np.isscalar(sto) else u
-
-    return pybamm.Function(LFP_OCP_backend, sto, T)
     
 
 

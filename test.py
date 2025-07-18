@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 
 
-model = pybamm.lithium_ion.DFN(options={"thermal": "isothermal"})
+model = pybamm.lithium_ion.DFN(options={"thermal": "lumped"})
 
 param = get_parameter_values()
 param = pybamm.ParameterValues(param)  
